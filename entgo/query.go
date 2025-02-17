@@ -6,7 +6,7 @@ import (
 )
 
 // BuildQuerySelect 构建查询条件
-func BuildQuerySelect(req *pagination.PagingRequest, defaultOrderField string) (whereSelector func(s *sql.Selector), querySelector []func(s *sql.Selector), err error) {
+func BuildQuerySelect(req *pagination.PagingRequest, defaultOrderField string) (whereSelector []func(s *sql.Selector), querySelector []func(s *sql.Selector), err error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			recErr, ok := rec.(error)
@@ -17,20 +17,25 @@ func BuildQuerySelect(req *pagination.PagingRequest, defaultOrderField string) (
 	}()
 
 	if req.Where != nil {
-		whereSelector = QueryCommandToWhereConditions(req.Where.LogicalOperator, req.Where.Conditions)
+		whereSelector = append(whereSelector, QueryCommandToWhereConditions(req.Where.LogicalOperator, req.Where.Conditions))
 	}
 
 	// 构建排序条件
 	var orderSelector func(s *sql.Selector)
-	err, orderSelector = BuildOrderSelector(req.OrderBy, defaultOrderField)
+	orderSelector, err = BuildOrderSelector(req.OrderBy, defaultOrderField)
 	if err != nil {
 		return nil, nil, err
 	}
-	if whereSelector != nil {
-		querySelector = append(querySelector, whereSelector)
-	}
-	// 添加排序条件
-	querySelector = append(querySelector, orderSelector)
 
+	// 添加排序条件
+	if orderSelector != nil {
+		querySelector = append(querySelector, orderSelector)
+	}
+
+	// 添加分页条件
+	pagingSelector := BuildPaginationSelector(req.Pagination, req.Page, req.Size)
+	if pagingSelector != nil {
+		querySelector = append(querySelector, pagingSelector)
+	}
 	return
 }

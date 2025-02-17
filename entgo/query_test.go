@@ -15,40 +15,15 @@ func TestQuery(t *testing.T) {
 		log.Fatalf("failed opening connection to mysql: %v", err)
 	}
 	defer client.Close()
-	whereSelector, _, err := BuildQuerySelect(&pagination.Where{
-		LogicalOperator: pagination.LogicalOperatorAnd,
-		Conditions: []pagination.Condition{
-			{
-				Field:           "age",
-				Operator:        pagination.QueryOperatorGreater,
-				Value:           10,
-				LogicalOperator: pagination.LogicalOperatorOr,
-				Conditions: []pagination.Condition{
-					{
-						Field:    "name",
-						Operator: pagination.QueryOperatorEqual,
-						Value:    "张三",
-					},
-					{
-						Field:    "name",
-						Operator: pagination.QueryOperatorEqual,
-						Value:    "李四",
-					},
-				},
-			},
-		},
+	p, err := Pagination[*ent.UserQuery, *ent.User](context.Background(), client.User.Query(), &pagination.PagingRequest{
+		Page:       1,
+		Size:       1,
+		Pagination: true,
 	})
-	print(whereSelector)
 	if err != nil {
-		log.Fatalf("failed building query: %v", err)
+		t.Error(err)
 	}
-	all, err := client.Debug().User.Query().Modify(whereSelector).All(context.Background())
-	if err != nil {
-		log.Fatalf("failed querying users: %v", err)
-	}
-	for _, u := range all {
-		log.Printf("user: %s", u.Name)
-	}
+	t.Logf("%+v", p)
 }
 
 func createUser(client *ent.Client) error {
