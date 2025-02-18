@@ -1,40 +1,41 @@
 package pagination
 
 // LogicalOperator 逻辑运算符
-type LogicalOperator int32
+type LogicalOperator string
 
 const (
 	// LogicalOperatorAnd and查询
-	LogicalOperatorAnd LogicalOperator = iota + 1
+	LogicalOperatorAnd LogicalOperator = "and"
 	// LogicalOperatorOr or查询
-	LogicalOperatorOr
+	LogicalOperatorOr LogicalOperator = "or"
 )
 
-type QueryOperator int32
+// QueryOperator 查询运算符
+type QueryOperator string
 
 const (
-	// QueryOperatorEqual 等于
-	QueryOperatorEqual QueryOperator = iota + 1
-	// QueryOperatorNotEqual 不等于
-	QueryOperatorNotEqual
-	// QueryOperatorGreater 大于
-	QueryOperatorGreater
-	// QueryOperatorGreaterEqual 大于等于
-	QueryOperatorGreaterEqual
-	// QueryOperatorLess 小于
-	QueryOperatorLess
-	// QueryOperatorLessEqual 小于等于
-	QueryOperatorLessEqual
-	// QueryOperatorIn 在其中
-	QueryOperatorIn
-	// QueryOperatorNotIn 不在其中
-	QueryOperatorNotIn
-	// QueryOperatorLike 模糊查询
-	QueryOperatorLike
-	// QueryOperatorIsNull 为空
-	QueryOperatorIsNull
-	// QueryOperatorIsNotNull 不为空
-	QueryOperatorIsNotNull
+	// QueryOperatorEqual 等于查询
+	QueryOperatorEqual QueryOperator = "="
+	// QueryOperatorNotEqual 不等于查询
+	QueryOperatorNotEqual QueryOperator = "!="
+	// QueryOperatorGreater 大于查询
+	QueryOperatorGreater QueryOperator = ">"
+	// QueryOperatorGreaterEqual 大于等于查询
+	QueryOperatorGreaterEqual QueryOperator = ">="
+	// QueryOperatorLess 小于查询
+	QueryOperatorLess QueryOperator = "<"
+	// QueryOperatorLessEqual 小于等于查询
+	QueryOperatorLessEqual QueryOperator = "<="
+	// QueryOperatorIn in查询
+	QueryOperatorIn QueryOperator = "in"
+	// QueryOperatorNotIn not in查询
+	QueryOperatorNotIn QueryOperator = "not_in"
+	// QueryOperatorLike like查询
+	QueryOperatorLike QueryOperator = "like"
+	// QueryOperatorIsNull null查询
+	QueryOperatorIsNull QueryOperator = "null"
+	// QueryOperatorIsNotNull not null查询
+	QueryOperatorIsNotNull QueryOperator = "not_null"
 )
 
 type Where struct {

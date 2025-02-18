@@ -2,6 +2,7 @@ package entgo
 
 import (
 	"entgo.io/ent/dialect/sql"
+
 	"github.com/go-fox/go-utils/pagination"
 )
 
