@@ -26,6 +26,9 @@ func isJSONFieldKey(key string) bool {
 
 // QueryCommandToWhereConditions 将查询条件转换为sql.Selector
 func QueryCommandToWhereConditions(logicalOperator pagination.LogicalOperator, conditions []pagination.Condition) func(s *sql.Selector) {
+	if len(conditions) == 0 {
+		return nil
+	}
 	return func(s *sql.Selector) {
 		predicate := processQueryCondition(s, logicalOperator, conditions)
 		s.Where(predicate)

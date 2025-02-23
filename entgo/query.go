@@ -18,7 +18,10 @@ func BuildQuerySelect(req *pagination.PagingRequest, defaultOrderField string) (
 	}()
 
 	if req.Where != nil {
-		whereSelector = append(whereSelector, QueryCommandToWhereConditions(req.Where.LogicalOperator, req.Where.Conditions))
+		conditions := QueryCommandToWhereConditions(req.Where.LogicalOperator, req.Where.Conditions)
+		if conditions != nil {
+			whereSelector = append(whereSelector)
+		}
 	}
 
 	// 构建排序条件
