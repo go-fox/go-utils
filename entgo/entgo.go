@@ -2,6 +2,7 @@ package entgo
 
 import (
 	"context"
+
 	"github.com/go-fox/go-utils/pagination"
 )
 
@@ -29,7 +30,7 @@ func Pagination[T pagination.PagingQueryBuilder[T, V, M], V any, M any](ctx cont
 	}
 
 	return pagination.PagingResponse[V]{
-		Total:   int32(count),
+		Total:   uint32(count),
 		Records: all,
 	}, nil
 }

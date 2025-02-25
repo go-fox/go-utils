@@ -2,11 +2,12 @@ package entgo
 
 import (
 	"entgo.io/ent/dialect/sql"
+
 	paging "github.com/go-fox/go-utils/pagination"
 )
 
 // BuildPaginationSelector 构建分页查询条件
-func BuildPaginationSelector(pagination bool, page int32, size int32) func(selector *sql.Selector) {
+func BuildPaginationSelector(pagination bool, page uint32, size uint32) func(selector *sql.Selector) {
 	if !pagination {
 		return nil
 	}
