@@ -1,5 +1,7 @@
 package pagination
 
+import "encoding/json"
+
 // LogicalOperator 逻辑运算符
 type LogicalOperator string
 
@@ -38,15 +40,16 @@ const (
 	QueryOperatorIsNotNull QueryOperator = "not_null"
 )
 
-type Where struct {
-	LogicalOperator LogicalOperator `json:"logical_operator"`
-	Conditions      []Condition     `json:"conditions"`
-}
-
+// Condition 条件
 type Condition struct {
 	Field           string          `json:"field"`
 	Operator        QueryOperator   `json:"operator"`
 	Value           interface{}     `json:"value"`
 	LogicalOperator LogicalOperator `json:"logical_operator"`
 	Conditions      []Condition     `json:"conditions"`
+}
+
+// ToJSON 转换为json
+func (c *Condition) ToJSON() ([]byte, error) {
+	return json.Marshal(c)
 }

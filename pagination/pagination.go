@@ -14,12 +14,12 @@ const (
 
 // PagingRequest 分页请求
 type PagingRequest struct {
-	Page       int32    `json:"page"`       // 当前页码
-	Size       int32    `json:"size"`       // 每页条数
-	Where      *Where   `json:"where"`      // 查询条件
-	OrderBy    []string `json:"order_by"`   // 排序字段
-	Pagination bool     `json:"pagination"` // 是否分页
-	Fields     []string `json:"fields"`     // 查询字段
+	Page       int32      `json:"page"`       // 当前页码
+	Size       int32      `json:"size"`       // 每页条数
+	Where      *Condition `json:"where"`      // 查询条件
+	OrderBy    []string   `json:"order_by"`   // 排序字段
+	Pagination bool       `json:"pagination"` // 是否分页
+	Fields     []string   `json:"fields"`     // 查询字段
 }
 
 type ModifyBuilder[T any] interface {
