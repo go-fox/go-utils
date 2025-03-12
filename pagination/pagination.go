@@ -2,6 +2,7 @@ package pagination
 
 import (
 	"context"
+	"encoding/json"
 
 	"entgo.io/ent/dialect/sql"
 )
@@ -21,6 +22,11 @@ type PagingRequest struct {
 	OrderBy    []string   `json:"order_by"`   // 排序字段
 	Pagination bool       `json:"pagination"` // 是否分页
 	Fields     []string   `json:"fields"`     // 查询字段
+}
+
+// ToJSON 转换为json
+func (p *PagingRequest) ToJSON() ([]byte, error) {
+	return json.Marshal(p)
 }
 
 type ModifyBuilder[T any] interface {
