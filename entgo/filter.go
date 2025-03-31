@@ -122,7 +122,7 @@ func processQueryOperator(selector *sql.Selector, p *sql.Predicate, op paginatio
 		if !ok {
 			s = convertor.ToString(value)
 		}
-		return p.Like(selector.C(field), s)
+		return p.Like(selector.C(field), "%"+s+"%")
 	case pagination.QueryOperatorIsNull:
 		p.IsNull(selector.C(field))
 	case pagination.QueryOperatorIsNotNull:
