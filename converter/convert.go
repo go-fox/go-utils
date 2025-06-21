@@ -53,3 +53,25 @@ func (c *Converter[TO, FROM]) From(to *TO) *FROM {
 	}
 	return &from
 }
+
+// ListTo converts a list of pointers to FROM elements into a list of pointers to TO elements using the Converter's To method.
+// If the input list is empty, it returns an empty list. Nil elements in the input are converted to nil in the output.
+// The conversion panics if an error occurs during copying for any element.
+func (c *Converter[TO, FROM]) ListTo(fs []*FROM) []*TO {
+	var ts []*TO
+	for _, f := range fs {
+		ts = append(ts, c.To(f))
+	}
+	return ts
+}
+
+// ListFrom converts a list of pointers to TO elements into a list of pointers to FROM elements using the Converter's From method.
+// If the input list is empty, it returns an empty list. Nil elements in the input are converted to nil in the output.
+// The conversion panics if an error occurs during copying for any element.
+func (c *Converter[TO, FROM]) ListFrom(ts []*TO) []*FROM {
+	var fs []*FROM
+	for _, t := range ts {
+		fs = append(fs, c.From(t))
+	}
+	return fs
+}
