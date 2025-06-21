@@ -5,7 +5,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"fmt"
 	"github.com/duke-git/lancet/v2/convertor"
-	"github.com/go-fox/go-utils/pagination"
 	"strings"
 )
 
@@ -25,7 +24,7 @@ func isJSONFieldKey(key string) bool {
 }
 
 // QueryCommandToWhereConditions 将查询条件转换为sql.Selector
-func QueryCommandToWhereConditions(logicalOperator pagination.LogicalOperator, conditions []pagination.Condition) func(s *sql.Selector) {
+func QueryCommandToWhereConditions(logicalOperator LogicalOperator, conditions []Condition) func(s *sql.Selector) {
 	if len(conditions) == 0 {
 		return nil
 	}
@@ -36,15 +35,15 @@ func QueryCommandToWhereConditions(logicalOperator pagination.LogicalOperator, c
 }
 
 // processQueryCondition 处理查询映射
-func processQueryCondition(s *sql.Selector, logicOperator pagination.LogicalOperator, conditions []pagination.Condition) *sql.Predicate {
+func processQueryCondition(s *sql.Selector, logicOperator LogicalOperator, conditions []Condition) *sql.Predicate {
 	predicates := makeConditions(s, conditions)
-	if logicOperator == pagination.LogicalOperatorOr {
+	if logicOperator == LogicalOperatorOr {
 		return sql.Or(predicates...)
 	}
 	return sql.And(predicates...)
 }
 
-func makeConditions(s *sql.Selector, conditions []pagination.Condition) []*sql.Predicate {
+func makeConditions(s *sql.Selector, conditions []Condition) []*sql.Predicate {
 	var ps []*sql.Predicate
 	for _, condition := range conditions {
 		p := makeFieldFilter(s, condition)
@@ -62,7 +61,7 @@ func makeConditions(s *sql.Selector, conditions []pagination.Condition) []*sql.P
 }
 
 // makeFieldFilter 构建查询条件
-func makeFieldFilter(s *sql.Selector, condition pagination.Condition) *sql.Predicate {
+func makeFieldFilter(s *sql.Selector, condition Condition) *sql.Predicate {
 	p := sql.P()
 	field := condition.Field
 	isJSONField := isJSONFieldKey(field)
@@ -91,41 +90,41 @@ func filterJSONField(s *sql.Selector, field, jsonbField string) string {
 	return p.String()
 }
 
-func processQueryOperator(selector *sql.Selector, p *sql.Predicate, op pagination.QueryOperator, field string, value any) *sql.Predicate {
+func processQueryOperator(selector *sql.Selector, p *sql.Predicate, op QueryOperator, field string, value any) *sql.Predicate {
 	switch op {
-	case pagination.QueryOperatorEqual:
+	case QueryOperatorEqual:
 		return p.EQ(selector.C(field), value)
-	case pagination.QueryOperatorNotEqual:
+	case QueryOperatorNotEqual:
 		return p.NEQ(selector.C(field), value)
-	case pagination.QueryOperatorGreater:
+	case QueryOperatorGreater:
 		return p.GT(selector.C(field), value)
-	case pagination.QueryOperatorGreaterEqual:
+	case QueryOperatorGreaterEqual:
 		return p.GTE(selector.C(field), value)
-	case pagination.QueryOperatorLess:
+	case QueryOperatorLess:
 		return p.LT(selector.C(field), value)
-	case pagination.QueryOperatorLessEqual:
+	case QueryOperatorLessEqual:
 		return p.LTE(selector.C(field), value)
-	case pagination.QueryOperatorIn:
+	case QueryOperatorIn:
 		args, ok := value.([]any)
 		if !ok {
 			return nil
 		}
 		return p.In(selector.C(field), args...)
-	case pagination.QueryOperatorNotIn:
+	case QueryOperatorNotIn:
 		args, ok := value.([]any)
 		if !ok {
 			return nil
 		}
 		return p.NotIn(selector.C(field), args)
-	case pagination.QueryOperatorLike:
+	case QueryOperatorLike:
 		s, ok := value.(string)
 		if !ok {
 			s = convertor.ToString(value)
 		}
 		return p.Like(selector.C(field), "%"+s+"%")
-	case pagination.QueryOperatorIsNull:
+	case QueryOperatorIsNull:
 		p.IsNull(selector.C(field))
-	case pagination.QueryOperatorIsNotNull:
+	case QueryOperatorIsNotNull:
 		p.NotNull(selector.C(field))
 	default:
 		return nil

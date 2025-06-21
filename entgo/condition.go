@@ -1,4 +1,4 @@
-package pagination
+package entgo
 
 import "encoding/json"
 

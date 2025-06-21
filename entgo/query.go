@@ -2,12 +2,10 @@ package entgo
 
 import (
 	"entgo.io/ent/dialect/sql"
-
-	"github.com/go-fox/go-utils/pagination"
 )
 
 // BuildQuerySelect 构建查询条件
-func BuildQuerySelect(req *pagination.PagingRequest, defaultOrderField string) (whereSelector []func(s *sql.Selector), querySelector []func(s *sql.Selector), err error) {
+func BuildQuerySelect(req *PagingRequest, defaultOrderField string) (whereSelector []func(s *sql.Selector), querySelector []func(s *sql.Selector), err error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			recErr, ok := rec.(error)
