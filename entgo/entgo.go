@@ -2,15 +2,16 @@ package entgo
 
 import (
 	"context"
+	"github.com/go-fox/fox/api/gen/go/pagination"
 )
 
 // Pagination 分页查询
-func Pagination[T PagingQueryBuilder[T, V, M], V any, M any](ctx context.Context, query T, request *PagingRequest, defaultOrderField ...string) (PagingResponse[V], error) {
+func Pagination[T PagingQueryBuilder[T, V, M], V any, M any](ctx context.Context, query T, params *pagination.PagingParams, defaultOrderField ...string) (PagingResponse[V], error) {
 	var orderField string
 	if len(defaultOrderField) > 0 {
 		orderField = defaultOrderField[0]
 	}
-	whereSelector, querySelector, err := BuildQuerySelect(request, orderField)
+	whereSelector, querySelector, err := BuildQuerySelect(params, orderField)
 	if err != nil {
 		return PagingResponse[V]{}, err
 	}

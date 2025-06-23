@@ -2,7 +2,6 @@ package entgo
 
 import (
 	"context"
-	"encoding/json"
 	"entgo.io/ent/dialect/sql"
 )
 
@@ -12,21 +11,6 @@ const (
 	// DefaultSize 默认每页条数
 	DefaultSize uint32 = 10
 )
-
-// PagingRequest 分页请求
-type PagingRequest struct {
-	Page       uint32     `json:"page"`       // 当前页码
-	Size       uint32     `json:"size"`       // 每页条数
-	Condition  *Condition `json:"condition"`  // 查询条件
-	OrderBy    []string   `json:"order_by"`   // 排序字段
-	Pagination bool       `json:"pagination"` // 是否分页
-	Fields     []string   `json:"fields"`     // 查询字段
-}
-
-// ToJSON 转换为json
-func (p *PagingRequest) ToJSON() ([]byte, error) {
-	return json.Marshal(p)
-}
 
 type ModifyBuilder[T any] interface {
 	Modify(modifiers ...func(s *sql.Selector)) T
@@ -58,10 +42,10 @@ func BuildPaginationSelector(pagination bool, page uint32, size uint32) func(sel
 		return nil
 	}
 	if page < 1 {
-		page = 1
+		page = DefaultPage
 	}
 	if size < 1 {
-		size = 10
+		size = DefaultSize
 	}
 	return func(selector *sql.Selector) {
 		selector.Offset(GetPageOffset(page, size)).Limit(int(size))

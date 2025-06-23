@@ -2,10 +2,11 @@ package entgo
 
 import (
 	"entgo.io/ent/dialect/sql"
+	"github.com/go-fox/fox/api/gen/go/pagination"
 )
 
 // BuildQuerySelect 构建查询条件
-func BuildQuerySelect(req *PagingRequest, defaultOrderField string) (whereSelector []func(s *sql.Selector), querySelector []func(s *sql.Selector), err error) {
+func BuildQuerySelect(req *pagination.PagingParams, defaultOrderField string) (whereSelector []func(s *sql.Selector), querySelector []func(s *sql.Selector), err error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			recErr, ok := rec.(error)
@@ -15,8 +16,8 @@ func BuildQuerySelect(req *PagingRequest, defaultOrderField string) (whereSelect
 		}
 	}()
 
-	if req.Condition != nil {
-		conditions := QueryCommandToWhereConditions(req.Condition.LogicalOperator, req.Condition.Conditions)
+	if req.Query != nil {
+		conditions := QueryCommandToWhereConditions(req.Query.LogicalOperator, req.Query.Conditions)
 		if conditions != nil {
 			whereSelector = append(whereSelector, conditions)
 		}
@@ -35,7 +36,7 @@ func BuildQuerySelect(req *PagingRequest, defaultOrderField string) (whereSelect
 	}
 
 	// 添加分页条件
-	pagingSelector := BuildPaginationSelector(req.Pagination, req.Page, req.Size)
+	pagingSelector := BuildPaginationSelector(req.GetNoPaging(), req.GetPage(), req.GetSize())
 	if pagingSelector != nil {
 		querySelector = append(querySelector, pagingSelector)
 	}
